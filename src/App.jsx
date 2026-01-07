@@ -1,97 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import TodoForm from './components/TodoForm';
-import TodoItem from './components/TodoItem';
-import { Sun, Moon } from 'lucide-react';
+import React from 'react';
 
-const App = () => {
-  const [todos, setTodos] = useState(() => {
-    const savedTodos = localStorage.getItem('todos');
-    return savedTodos ? JSON.parse(savedTodos) : [
-      { id: 1, text: "Build the modern Todo App", completed: false },
-      { id: 2, text: "Implement Dark Mode with Tailwind CSS", completed: false }
-    ];
-  });
-
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    // Initialize dark mode based on system preference or saved setting
-    if (localStorage.getItem('theme') === 'dark') return true;
-    if (localStorage.getItem('theme') === 'light') return false;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
-
-  // Effect to manage localStorage for todos
-  useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos]);
-
-  // Effect to manage Dark Mode class on the HTML element
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [isDarkMode]);
-
-  const addTodo = (text) => {
-    const newTodo = {
-      id: Date.now(),
-      text,
-      completed: false,
-    };
-    setTodos([newTodo, ...todos]);
-  };
-
-  const deleteTodo = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id));
-  };
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(prev => !prev);
-  };
-
+function App() {
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300 p-4 sm:p-8">
-      <div className="max-w-xl mx-auto">
-        
-        {/* Header and Dark Mode Toggle */}
-        <header className="flex justify-between items-center mb-8 pt-4">
-          <h1 className="text-4xl font-extrabold text-gray-800 dark:text-white tracking-tight">
-            Modern Todo List
-          </h1>
-          <button
-            onClick={toggleDarkMode}
-            className="p-3 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-yellow-400 hover:ring-2 ring-indigo-500 transition duration-300"
-            aria-label="Toggle Dark Mode"
-          >
-            {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
-          </button>
-        </header>
-
-        {/* Todo Input Form */}
-        <TodoForm addTodo={addTodo} />
-
-        {/* Todo List */}
-        <div className="space-y-3">
-          {todos.length === 0 ? (
-            <p className="text-center text-gray-500 dark:text-gray-400 mt-10 text-lg italic">
-              No tasks yet! Start adding some productivity boosters.
-            </p>
-          ) : (
-            todos.map(todo => (
-              <TodoItem 
-                key={todo.id} 
-                todo={todo} 
-                deleteTodo={deleteTodo} 
-              />
-            ))
-          )}
+    <div className="min-h-screen bg-black text-white font-sans">
+      {/* Header/Navigation */}
+      <header className="flex justify-between items-center p-4 bg-black/80 fixed top-0 left-0 right-0 z-10">
+        <div className="text-3xl font-bold text-red-600">nacero</div>
+        <nav className="space-x-6 hidden md:flex">
+          <a href="#" className="hover:text-gray-300">Home</a>
+          <a href="#" className="hover:text-gray-300">TV Shows</a>
+          <a href="#" className="hover:text-gray-300">Movies</a>
+          <a href="#" className="hover:text-gray-300">New & Popular</a>
+          <a href="#" className="hover:text-gray-300">My List</a>
+        </nav>
+        <div className="flex items-center space-x-4">
+          <button className="text-white">Search</button>
+          <div className="w-8 h-8 bg-gray-600 rounded"></div> {/* User Avatar */}
         </div>
-      </div>
+      </header>
+
+      {/* Hero Section */}
+      <main className="pt-16">
+        <div className="relative h-[80vh] bg-cover bg-center flex items-end p-12"
+             style={{backgroundImage: "url('https://via.placeholder.com/1920x1080/880000/FFFFFF?text=Featured+Movie+Banner')"}}>
+          <div className="max-w-lg bg-black/50 p-4 rounded">
+            <h1 className="text-6xl font-extrabold mb-4">The Great Stream</h1>
+            <p className="text-xl mb-6">A thrilling adventure awaits. Watch now or add to your list.</p>
+            <div className="flex space-x-4">
+              <button className="bg-white text-black px-6 py-2 rounded font-bold hover:bg-opacity-80 transition">
+                ▶ Play
+              </button>
+              <button className="bg-gray-700 text-white px-6 py-2 rounded font-bold hover:bg-gray-600 transition">
+                + My List
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Content Rows */}
+        <section className="p-12 space-y-8">
+          <h2 className="text-2xl font-bold mb-4">Trending Now</h2>
+          <div className="flex overflow-x-scroll space-x-4 pb-4 scrollbar-hide">
+            {Array(10).fill(0).map((_, i) => (
+              <div key={i} className="flex-shrink-0 w-64 h-40 bg-gray-800 rounded cursor-pointer hover:scale-105 transition-transform duration-300">
+                <img src={`https://via.placeholder.com/256x160/333333/FFFFFF?text=Title+${i+1}`} alt={`Title ${i+1}`} className="w-full h-full object-cover rounded"/>
+              </div>
+            ))}
+          </div>
+
+          <h2 className="text-2xl font-bold mb-4">nacero Originals</h2>
+          <div className="flex overflow-x-scroll space-x-4 pb-4 scrollbar-hide">
+            {Array(10).fill(0).map((_, i) => (
+              <div key={i} className="flex-shrink-0 w-64 h-40 bg-gray-800 rounded cursor-pointer hover:scale-105 transition-transform duration-300">
+                <img src={`https://via.placeholder.com/256x160/660000/FFFFFF?text=Original+${i+1}`} alt={`Original ${i+1}`} className="w-full h-full object-cover rounded"/>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
     </div>
   );
-};
+}
 
 export default App;
