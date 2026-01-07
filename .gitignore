@@ -1,0 +1,20 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/dist
+
+# environment variables
+.env
+.env*.local
+
+# vite specific
+/.vite
+
+# os specific
+.DS_Store
